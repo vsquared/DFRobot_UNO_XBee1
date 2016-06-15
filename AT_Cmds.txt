@@ -1,0 +1,176 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1404\cocoasubrtf470
+{\fonttbl\f0\fswiss\fcharset0 ArialMT;\f1\froman\fcharset0 Times-Roman;}
+{\colortbl;\red255\green255\blue255;\red200\green207\blue214;}
+\margl1440\margr1440\vieww28500\viewh17920\viewkind0
+\deftab720
+\pard\pardeftab720\sl540\sa240\partightenfactor0
+
+\f0\b\fs46 \cf0 \expnd0\expndtw0\kerning0
+Things You Will Need:\
+\pard\pardeftab720\partightenfactor0
+
+\b0 \cf0 1. Mac computer\
+2. \'91CoolTerm\'92 App installed\
+3. 2 - XBee Series 1 Modules\
+4. SparkFun XBee Explorer USB, or similar
+\fs48 \cf2  \
+
+\b\fs46 \cf0 \
+\pard\pardeftab720\sl540\sa240\partightenfactor0
+\cf0 Configure XBee Modules 
+\f1\b0\fs24 \
+\pard\pardeftab720\sl540\sa240\partightenfactor0
+
+\f0\fs46 \cf0 Two XBee modules are required.  We will assign one XBee as "a", and the other as \'93b\'94, configuring them individually. Plug the \'93a\'94 XBee module into the explorer and connect via USB to Mac.  
+\b \
+Connect to \'91CoolTerm\'92\
+\pard\pardeftab720\partightenfactor0
+
+\b0 \cf0 Set Serial Port Options\
+Select Port\
+Set Baudrate to 
+\b 9600\uc0\u8232 
+\b0 Data Bits to 
+\b 8\uc0\u8232 
+\b0 Parity to 
+\b none\uc0\u8232 
+\b0 Stop Bits to 
+\b 1\uc0\u8232 
+\b0 Select 
+\b "Terminal" 
+\b0 from the left- hand list and click 
+\b "OK" 
+\f1\b0\fs24 \
+\pard\pardeftab720\sl540\sa240\partightenfactor0
+
+\f0\fs46 \cf0 Check 
+\b "Local Echo"
+\b0 . Click 
+\b \'93OK\'94 
+\b0 to save the settings, then close the 
+\b \'93Options\'94 
+\b0 window. 
+\f1\fs24 \
+
+\f0\fs46 Click 
+\b \'93Connect\'94
+\b0 . 
+\f1\fs24 \
+\pard\pardeftab720\sl540\sa240\partightenfactor0
+
+\f0\b\fs46 \cf0 AT Commands To Configure\
+\pard\pardeftab720\partightenfactor0
+\cf0 ATID 
+\b0 - PAN ID (Personnel Area Network ID) value can be anything from 0000 to FFFF, but must be the same for both XBee modules. 
+\f1\fs24 \
+
+\f0\b\fs46 ATMY 
+\b0 - The unique number used as the address of that XBee module\uc0\u8232 
+\b ATDH 
+\b0 - Destination Address High, the first half of the address that we want to talk to 
+\f1\fs24 \
+
+\f0\b\fs46 ATDL 
+\b0 - Destination Address Low, address we will use to locate the other XBee module 
+\f1\fs24 \
+
+\f0\b\fs46 ATBD 
+\b0 - Baud rate, this value needs to be the same on both XBee modules.  (\'913\'92 = 9600)\
+\pard\pardeftab720\partightenfactor0
+
+\f1\fs24 \cf0 \
+\pard\pardeftab720\sl540\sa240\partightenfactor0
+
+\f0\b\fs46 \cf0 Configuring the XBee "a" module: 
+\f1\b0\fs24 \
+\pard\pardeftab720\sl540\sa240\partightenfactor0
+
+\f0\fs46 \cf0 While in \'91CoolTerm\'92:\uc0\u8232 Type 
+\b +++ 
+\b0 to enter command mode, CoolTerm will respond with OK\
+Type 
+\b ATID 3322 
+\b0 and press Enter, CoolTerm will respond with OK\uc0\u8232 Type 
+\b ATMY 1 
+\b0 and press Enter, CoolTerm will respond with OK\uc0\u8232 Type 
+\b ATDH 0 
+\b0 and press Enter, CoolTerm will respond with OK\uc0\u8232 Type 
+\b ATDL 0 
+\b0 and press Enter, CoolTerm will respond with OK\uc0\u8232 Type 
+\b ATBD 3 
+\b0 and press Enter, CoolTerm will respond with OK 
+\f1\fs24 \
+
+\f0\fs46 Type 
+\b ATWR 
+\b0 and press Enter to save the configuration to XBee memory. Now XBee "a" is ready to use. 
+\f1\fs24 \
+\pard\pardeftab720\sl540\sa240\partightenfactor0
+
+\f0\b\fs46 \cf0 Configuring the XBee "b" module: 
+\f1\b0\fs24 \
+\pard\pardeftab720\sl540\sa240\partightenfactor0
+
+\f0\fs46 \cf0 While in \'91CoolTerm\'92:\uc0\u8232 Type 
+\b +++ 
+\b0 to enter command mode, CoolTerm will respond with OK\
+Type 
+\b ATID 3322 
+\b0 and press Enter, CoolTerm will respond with OK\uc0\u8232 Type 
+\b ATMY 0 
+\b0 and press Enter, CoolTerm will respond with OK\uc0\u8232 Type 
+\b ATDH 0 
+\b0 and press Enter, CoolTerm will respond with OK\uc0\u8232 Type 
+\b ATDL 1 
+\b0 and press Enter, CoolTerm will respond with OK\uc0\u8232 Type 
+\b ATBD 3 
+\b0 and press Enter, CoolTerm will respond with OK 
+\f1\fs24 \
+
+\f0\fs46 Type 
+\b ATWR 
+\b0 and press Enter to save the configuration to XBee memory. Now XBee "b" is ready to use. 
+\f1\fs24 \
+
+\f0\fs46 Type 
+\b ATCN 
+\b0 to get out of the (+++) command mode. \
+\pard\pardeftab720\partightenfactor0
+\cf0 \
+
+\b Steps to Check Current Configuration of the \'93a\'94 XBee module
+\f1\b0\fs24 \
+
+\f0\fs46 While in \'91CoolTerm\'92 ask the XBee module for its current configuration. 
+\f1\fs24 \
+
+\f0\fs46 Type 
+\b +++ 
+\b0 to enter command mode, CoolTerm will respond with OK\uc0\u8232 Type 
+\b ATID 
+\b0 and press Enter, CoolTerm will respond with four digit number (shown as 3343) 
+\f1\fs24 \
+
+\f0\fs46 Type 
+\b ATMY 
+\b0 and press Enter, CoolTerm will respond with one digit number (shown as 1) 
+\f1\fs24 \
+
+\f0\fs46 Type 
+\b ATDH 
+\b0 and press Enter, CoolTerm will respond with one digit number (Shown as 0) 
+\f1\fs24 \
+
+\f0\fs46 Type 
+\b ATDL 
+\b0 and press Enter, CoolTerm will respond with one digit number (Shown as 0) 
+\f1\fs24 \
+
+\f0\fs46 Type 
+\b ATBD 
+\b0 and press Enter, CoolTerm will respond with one digit number (Shown as 3) 
+\f1\fs24 \
+
+\f0\fs46 Repeat the steps above to to check XBee "b" current configuration. 
+\f1\fs24 \
+}
