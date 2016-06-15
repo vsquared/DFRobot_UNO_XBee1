@@ -1,0 +1,212 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1404\cocoasubrtf470
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+\margl1440\margr1440\vieww17340\viewh18460\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 /*\
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A  PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\
+*/\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 /*\
+ Designed for 2.8" TFT Touch Shield v2 Resistive\
+ Sender unit. Used with Project: DFRobot_UNO_XBee1\
+*/\
+\
+#include <SPI.h>\
+#include <Wire.h>\
+#include <Adafruit_GFX.h>\
+#include <Adafruit_ILI9341.h>\
+#include <Adafruit_STMPE610.h>\
+\
+// Default values for Adafruit shield v2.\
+#define STMPE_CS 8\
+#define TFT_DC 9\
+#define TFT_CS 10\
+\
+Adafruit_STMPE610 ts = Adafruit_STMPE610(STMPE_CS);\
+Adafruit_ILI9341 tft = Adafruit_ILI9341(TFT_CS, TFT_DC);\
+\
+// Assign human-readable names to some common 16-bit color values:\
+#define	BLACK   0x0000\
+#define	BLUE    0x001F\
+#define	RED     0xF800\
+#define	GREEN   0x07E0\
+#define CYAN    0x07FF\
+#define MAGENTA 0xF81F\
+#define YELLOW  0xFFE0\
+#define WHITE   0xFFFF\
+\
+#define TS_MINX 200\
+#define TS_MINY 200\
+#define TS_MAXX 3800\
+#define TS_MAXY 3800\
+\
+ // Rotations 0,2 = portrait  : 0->USB=right,upper : 2->USB=left,lower\
+ // Rotations 1,3 = landscape : 1->USB=left,upper  : 3->USB=right,lower\
+ const int rotation = 0; //(0->3)\
+\
+// Coordinates of core square for arrows\
+ const int left = tft.width()/3;\
+ //const int left = 80;\
+ const int top = tft.height()/2-30;\
+ const int w = 80;\
+ const int h = 80;\
+// int coreR[4] = \{tft.width()/2, tft.height()/2-80, 80, 80\};\
+ \
+ void drawArrows()\
+ \{\
+  // core square = left, top, w, h \
+  tft.fillRect(left, top, w, h, RED);\
+  tft.setCursor(left+w/2-6,top+h/2-6);\
+  tft.setTextColor(WHITE, RED);\
+  tft.print("S");\
+  // up arrow rect = left, top - h, w, h \
+  tft.fillTriangle(left + w/2, top - h, left, top, left + w, top, WHITE);\
+  tft.setCursor(left+w/2-2,top-h/2+6);\
+  tft.setTextColor(BLUE, WHITE);\
+  tft.print("F");\
+  // down arrow rect = left, top + h, w, h\
+  tft.fillTriangle(left + w/2, top + 2*h, left, top + h, left + w, top + h, WHITE);\
+  tft.setCursor(left+w/2-2,top+h+h/2-12);\
+  tft.setTextColor(BLUE, WHITE);\
+  tft.print("B");\
+  // right arrow rect = left + w, top, w, h\
+  tft.fillTriangle(left + 2*w, top + h/2, left + w, top, left + w, top + h, WHITE);\
+  tft.setCursor(left+w+w/2-6,top+h/2-6);\
+  tft.setTextColor(BLUE, WHITE);\
+  tft.print("R");\
+  // left arrow rect = left - w, top, w, h\
+  tft.fillTriangle(left - w, top + h/2, left, top, left, top + h, WHITE);\
+  tft.setCursor(left-w/2,top+h/2-6);\
+  tft.setTextColor(BLUE, WHITE);\
+  tft.print("L");\
+  // Restore \
+  tft.setTextColor(WHITE, BLUE);\
+ \}\
+\
+void showCommand(String cmd)\
+\{\
+ // Erase old data \
+ tft.fillRect( 20, 10, tft.width()-10, 30, BLUE );\
+ tft.setCursor(20,10);\
+ tft.setTextColor(WHITE);\
+ tft.setTextSize(3);\
+ tft.print(cmd);  \
+\}\
+\
+void leftArrowHandler()\
+\{\
+ showCommand("Left");\
+ Serial.print('l');\
+\}\
+ \
+void rightArrowHandler()\
+\{\
+ showCommand("Right");\
+ Serial.print('r');\
+\}\
+ \
+void upArrowHandler()\
+\{\
+ showCommand("Forward");\
+ Serial.print('f');\
+\}\
+ \
+void downArrowHandler()\
+\{\
+ showCommand("Reverse");\
+ Serial.print('b');\
+\}\
+ \
+void stopHandler()\
+\{\
+ showCommand("Stop");\
+ Serial.print('s');\
+\}\
+ \
+ void setup() \
+ \{\
+  Serial.begin(9600);\
+  tft.begin();\
+  ts.begin();\
+  tft.setRotation(rotation);\
+  tft.fillScreen(BLUE);\
+  tft.setTextColor(WHITE, BLUE);\
+  tft.setTextSize(2);\
+  drawArrows();\
+ \}\
+\
+ void loop()\
+ \{\
+   uint16_t x, y;\
+   TS_Point p = ts.getPoint();\
+\
+  if (! ts.touched()) \{  \
+    return;\
+  \}\
+\
+  delay(100);\
+  p = ts.getPoint();\
+ \
+ if (rotation == 0)\{\
+  x = map(p.x, TS_MINX, TS_MAXX, 0, tft.width());\
+  y = map(p.y, TS_MINY, TS_MAXY, 0, tft.height());\
+ \}\
+ \
+ if (rotation == 1)\{\
+ // p.x, p.y reversed //\
+  x = map(p.y, TS_MINY, TS_MAXY, 0, tft.width());\
+  y = map(p.x, TS_MAXX, TS_MINX, 0, tft.height());\
+ \}\
+ \
+ if (rotation == 2)\{\
+  x = map(p.x, TS_MAXX, TS_MINX, 0, tft.width());\
+  y = map(p.y, TS_MAXY, TS_MINY, 0, tft.height());\
+ \}\
+ \
+ if (rotation == 3)\{\
+ //  p.x, p.y reversed //\
+  x = map(p.y, TS_MAXY, TS_MINY, 0, tft.width()); \
+  y = map(p.x, TS_MINX, TS_MAXX, 0, tft.height());\
+ \}\
+\
+  while (ts.touched()) \{\
+ // up arrow rect = left, top - h, w, h\
+    if(x > left && x < left + w)\{\
+      if(y > top - h && y < top)\{\
+       upArrowHandler();\
+       return;\
+      \}\
+    \}\
+ // down arrow rect = left, top + h, w, h \
+    if(x > left && x < left + w)\{\
+      if(y > top + h && y < top + 2*h)\{\
+       downArrowHandler();\
+       return;\
+      \}\
+    \}\
+ // right arrow rect = left + w, top, w, h   \
+   if(x > left + w && x < left + 2*w)\{\
+     if(y > top && y < top + h)\{\
+       rightArrowHandler();\
+     \}\
+   \}   \
+ // left arrow rect = left - w, top, w, h   \
+   if(x > left - w && x < left)\{\
+     if(y > top && y < top + h)\{\
+       leftArrowHandler();\
+     \}\
+   \}\
+    // stop rect = left, top, w, h   \
+   if(x > left && x < left+w)\{\
+     if(y > top && y < top + h)\{\
+       stopHandler();\
+     \}\
+   \}  \
+  \}\
+ \}}
